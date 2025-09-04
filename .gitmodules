@@ -1,0 +1,3 @@
+[submodule "ai-devkit"]
+	path = ai-devkit
+	url = https://github.com/fielmann-ag/ai-devkit.git
