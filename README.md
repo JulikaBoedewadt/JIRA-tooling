@@ -51,3 +51,26 @@ Use Atlassian's official remote MCP server for secure and feature-rich integrati
 - **Enterprise Security**: Protected data with trusted AI partner integrations
 - **Cross-Platform**: Works with Cursor, VS Code, Claude, and other MCP-compatible tools
 - **Real-time Access**: Direct integration with Jira and Confluence data
+- **DORA Metrics Analysis**: Comprehensive DevOps performance metrics for JIRA projects
+
+## DORA Metrics Analysis
+
+Analyze your team's DevOps performance with automated DORA metrics calculation:
+
+```bash
+# Analyze any JIRA project
+./run_dora_analysis.sh --project-name "Your Project" --project-key "YOUR"
+
+# Examples
+./run_dora_analysis.sh --project-name "Terminvereinbarung" --project-key "TEV"
+```
+
+**Universal Support**: Any valid JIRA project key
+
+**Metrics Analyzed**:
+- Lead Time for Changes
+- Deployment Frequency  
+- Mean Time to Recovery (MTTR)
+- Change Failure Rate
+
+For detailed documentation, see the [DORA/README.md](DORA/README.md) file.
