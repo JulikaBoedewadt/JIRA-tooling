@@ -25,9 +25,7 @@ Get your recent issues (last 7 days):
 
 ## MCP Integration with Cursor
 
-### Option 1: Official Atlassian MCP Server (Recommended)
-
-For the most secure and feature-rich integration, use Atlassian's official remote MCP server:
+Use Atlassian's official remote MCP server for secure and feature-rich integration:
 
 1. **Configure Cursor MCP settings** (`~/.cursor/mcp.json`):
    ```json
@@ -41,31 +39,6 @@ For the most secure and feature-rich integration, use Atlassian's official remot
    ```
 
 2. **Restart Cursor** and authenticate with your Atlassian account when prompted.
-
-### Option 2: Third-party JIRA MCP Server
-
-For direct JIRA API access with custom configuration:
-
-1. **Update your Cursor MCP configuration** (`~/.cursor/mcp.json`):
-   ```json
-   {
-     "mcpServers": {
-       "jira": {
-         "command": "npx",
-         "args": [
-           "-y",
-           "@quialorraine/jira-mcp-server",
-           "--jira-base-url=https://fielmann.atlassian.net",
-           "--jira-email=your-email@example.com",
-           "--jira-api-token=$JIRA_API_TOKEN",
-           "--stdio"
-         ]
-       }
-     }
-   }
-   ```
-
-2. **Restart Cursor** and ask it to manage JIRA issues directly.
 
 ## Official Documentation
 
