@@ -60,5 +60,5 @@ Thumbs.db
 # other generated files
 # DORA
 DORA/dora_env/
-DORA/dora_metrics_*_results.json
+DORA/tmp/
 

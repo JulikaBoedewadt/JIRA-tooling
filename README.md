@@ -18,10 +18,20 @@ Simple JIRA ticket management with MCP integration for Cursor IDE.
 
 ## Usage
 
+### Get Recent Issues
 Get your recent issues (last 7 days):
 ```bash
 ./get-my-recent-issues.sh
 ```
+
+### DORA Metrics Analysis
+Analyze your team's DevOps performance with DORA metrics:
+```bash
+cd DORA
+./analyze.sh --project-name "Your Project" --project-key "YOUR_PROJECT"  # One command!
+```
+
+📖 **Complete guide:** [DORA/USER_GUIDE.md](DORA/USER_GUIDE.md)
 
 ## MCP Integration with Cursor
 

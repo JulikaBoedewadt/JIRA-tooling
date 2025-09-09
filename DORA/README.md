@@ -1,6 +1,6 @@
-# DORA Metrics Analyzer for JIRA Projects
+# 🚀 DORA Metrics Analyzer for JIRA Projects
 
-A Python script that automatically analyzes DORA (DevOps Research and Assessment) metrics for any JIRA project.
+A unified Python script that automatically analyzes DORA (DevOps Research and Assessment) metrics for any JIRA project using real data.
 
 ## 🎯 What are DORA Metrics?
 
@@ -11,156 +11,138 @@ DORA metrics are four key performance indicators that measure software delivery 
 3. **Mean Time to Recovery (MTTR)** - Time to recover from production failures
 4. **Change Failure Rate** - Percentage of deployments causing production failures
 
-## 🚀 Quick Start
+## 🚀 Quick Start (5 minutes)
 
-### 1. Run Analysis
+### Run Analysis (in Cursor IDE)
 ```bash
-# Analyze any JIRA project
-./run_dora_analysis.sh --project-name "Your Project" --project-key "YOUR"
-
-# Examples
-./run_dora_analysis.sh --project-name "Terminvereinbarung" --project-key "TEV"
+./analyze.sh --project-name "Your Project" --project-key "YOUR_PROJECT"
 ```
 
 ## 📊 Sample Output
 
 ```
+🚀 DORA Metrics Analyzer
+========================
+🔧 Activating virtual environment...
+🚀 Starting DORA analysis...
+🚀 Unified DORA Metrics Analyzer
+==================================================
+🏷️  Project: Terminvereinbarung (TEV)
+
+🔄 Fetching fresh data...
+🔍 Fetching data for project: TEV
+🔍 Getting accessible Atlassian resources...
+🔍 Searching JIRA issues...
+✅ Fetched 29 issues from JIRA
+💾 Data saved to: tmp/dora_metrics_tev_data.json
+
+📊 Running DORA analysis...
+📊 Running DORA analysis for: Terminvereinbarung
+✅ Analysis completed successfully!
+
+================================================================================
+📋 DORA METRICS RESULTS:
+================================================================================
 🚀 DORA Metrics Analyzer - Terminvereinbarung Project
 ============================================================
 🏷️  Project: Terminvereinbarung (TEV)
-🔍 Analyzing DORA metrics...
-✅ Analyzing 18 issues
+🔄 Loading data from: tmp/dora_metrics_tev_data.json
+✅ Loaded 29 issues from tmp/dora_metrics_tev_data.json
+📅 Data fetched at: 2025-01-27T12:30:00.000Z
+📊 Data source: Real JIRA Data (MCP) - Last 30 days (Done status)
+🔍 Analyzing DORA metrics for 29 issues
 
 ================================================================================
 📊 DORA METRICS REPORT - TERMINVEREINBARUNG PROJECT
 ================================================================================
-📅 Analysis Date: 2025-09-08 16:01:40
-📈 Issues Analyzed: 19
-🔧 Data Source: Real MCP Data
+📅 Analysis Date: 2025-09-09 17:17:00
+📈 Issues Analyzed: 29
+🔧 Data Source: Real JIRA Data (MCP)
 ================================================================================
 
 Overall DORA Performance Summary                   📈
 ================================================================================
 Metric               Current Level        Industry Benchmark        Status         
 ================================================================================
-Lead Time            ~53 days             < 1 week (Elite)          ⚠️ Needs Improvement
-Deployment Freq      0.8/week             Daily (Elite)             ✅ Excellent
-MTTR                 33.9 days            < 1 hour (Elite)          ⚠️ Needs Improvement
-Change Failure Rate  31.6%                < 15% (Elite)             ⚠️ Needs Improvement
+📊 Tickets Analyzed   29                                                            
+--------------------------------------------------------------------------------
+Lead Time            ~36 days             < 1 week (Elite)          🚨 Needs Improvement
+Deployment Freq      0.9/week             Daily (Elite)             🤩 Excellent
+MTTR                 49.3 days            < 1 hour (Elite)          🚨 Needs Improvement
+Change Failure Rate  13.8%                < 15% (Elite)             ✅ Good
 ================================================================================
 
 📋 DETAILED BREAKDOWN
-   Lead Time:        53.6 days avg, 13.1 days median
-   Deployment Freq:  10 deployment days in 90 days
-   MTTR:            812.9 hours (33.9 days)
-   Failure Rate:    6/19 issues (31.6%)
-   Critical Bugs:   2 (10.5%)
+   Lead Time:        36.5 days avg, 13.7 days median
+   Deployment Freq:  12 deployment days in 90 days
+   MTTR:            1182.1 hours (49.3 days)
+   Failure Rate:    4/29 issues (13.8%)
+   Critical Bugs:   1 (3.4%)
 
 💡 RECOMMENDATIONS
    • Reduce lead time by implementing smaller, more frequent releases
    • Improve incident response and monitoring capabilities
-   • Enhance testing coverage and implement better quality gates
 
 ================================================================================
 
-💾 Results saved to: dora_metrics_tev_results.json
+💾 Results saved to: tmp/dora_metrics_tev_results.json
+
+🎉 DORA analysis completed successfully!
+📁 Results saved to: dora_metrics_tev_results.json
+📁 Data saved to: tmp/dora_metrics_tev_data.json
 ```
 
-## 🎛️ Universal Project Support
+## 🎛️ Command Options
 
-The script now supports **any JIRA project** with automatic sample data generation:
-
-### Command Line Options
-
+### Basic Usage
 ```bash
 # Analyze any JIRA project
-./run_dora_analysis.sh --project-name "Your Project" --project-key "YOUR"
+./analyze.sh --project-name "Your Project" --project-key "YOUR_PROJECT"
 
-# All available options
-./run_dora_analysis.sh --help
+
 ```
 
-### Available Parameters
-
-- `--project-name`: Display name for the project (required)
-- `--project-key`: JIRA project key for file naming (required)
-
-### Examples
-
+### Direct Python Execution
 ```bash
-# Analyze different projects
-./run_dora_analysis.sh --project-name "Terminvereinbarung" --project-key "TEV"
+# Run the unified analyzer directly
+python3 analyze_dora.py --project-name "Your Project" --project-key "YOUR_PROJECT"
 ```
 
-## 🔧 Technical Details
+## 🔧 How It Works
 
-The analyzer automatically generates realistic sample data for any project:
+### 1. Automatic Setup
+- Creates virtual environment if needed
+- Installs required dependencies (`python-dateutil`)
+- Activates environment
+- All happens automatically when you run `./analyze.sh`
 
-- **Dynamic Data Generation**: Creates 10-20 realistic issues per project
-- **Varied Issue Types**: Stories (50%), Tasks (30%), Bugs (20%)
-- **Realistic Timelines**: Issues created within last 90 days
-- **Smart Lead Times**: 1 hour to 30 days resolution times
-- **Diverse Priorities**: Low, Medium, High, Highest with realistic distribution
+### 2. Fresh Data Fetching
+- **Always fetches fresh data** via MCP tools (last 30 days, Done status only)
+- **Saves data** to `tmp/` folder for reference
+- **No caching** - ensures you always get the most recent metrics
 
-```bash
-# Install Python dependencies
-pip3 install python-dateutil
+### 3. Complete Analysis
+- Runs DORA metrics calculation
+- Displays comprehensive report
+- Saves results to JSON file in `tmp/` folder
 
-# Run the analyzer
-python3 dora_metrics_integrated.py --project-name "Your Project" --project-key "YOUR"
+## 📁 File Structure
+
 ```
-
-## 📁 Files
-
-- `dora_metrics_integrated.py` - Main analysis script
-- `requirements.txt` - Python dependencies
-- `README.md` - This documentation
-- `dora_metrics_{project_key}_{source}_results.json` - Generated results files
-
-## ⚙️ Configuration
-
-The script is now configurable for any JIRA project using command-line parameters:
-
-- **Project Name**: Display name shown in reports
-- **Project Key**: Used for file naming and JQL queries
-- **Data Source**: Choose between real, mock, or live data
-
-No manual code changes needed - just use the command-line parameters!
+DORA/
+├── analyze.sh                    # Main entry point (shell wrapper)
+├── analyze_dora.py              # Unified analyzer with MCP integration
+├── dora_metrics.py              # Core metrics calculation
+├── tmp/                         # Generated data files (git-ignored)
+│   ├── dora_metrics_{project}_data.json      # Project data
+│   └── dora_metrics_{project}_results.json  # Analysis results
+├── dora_env/                    # Virtual environment (git-ignored)
+└── README.md                    # This documentation
+```
 
 ## 🎯 Performance Levels
 
-The script categorizes performance into four levels:
-
-- **Elite** - Top 25% of performers
-- **High** - Above average performance  
-- **Medium** - Average performance
-- **Low** - Below average performance
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-1. **"ATLASSIAN_API_TOKEN environment variable not set"**
-   - Make sure you've set the environment variable
-   - Check that the token is valid
-
-2. **"No issues found"**
-   - Verify your API credentials
-   - Check that the project key is correct
-   - Ensure you have access to the project
-
-3. **"Error fetching issues"**
-   - Check your internet connection
-   - Verify the API token has correct permissions
-   - Ensure the cloud ID is correct
-
-### Getting Help
-
-- Check the Atlassian API documentation
-- Verify your API token permissions
-- Ensure you have access to the Terminvereinbarung project
-
-## 📈 Understanding Your Results
+The script categorizes performance into four levels based on DORA research:
 
 ### Lead Time for Changes
 - **Elite**: < 1 day
@@ -186,6 +168,39 @@ The script categorizes performance into four levels:
 - **Medium**: 15-30%
 - **Low**: > 30%
 
+## 🔍 Troubleshooting
+
+### Common Issues
+
+1. **"MCP tools not available"**
+   - **Solution**: Run in Cursor IDE, not terminal
+   - **Why**: MCP tools only work in Cursor IDE context
+
+2. **"No issues found"**
+   - **Solution**: Check your project key is correct
+   - **Verify**: You have access to the JIRA project
+   - **Check**: The project has issues closed in the last 30 days
+
+3. **"Data file not found"**
+   - **Solution**: Run with `--force-refresh` to fetch data
+   - **Check**: The data file exists in `tmp/` folder
+
+4. **"No data available for analysis"**
+   - **Solution**: Ensure you have access to the project
+   - **Check**: The data file contains issues
+
+### Getting Help
+
+- Check the MCP configuration in Cursor
+- Verify your Atlassian account permissions
+- Ensure you have access to the target JIRA project
+
+## 📋 Prerequisites
+
+1. **Cursor IDE** with MCP tools enabled
+2. **Atlassian access** to your JIRA instance
+3. **Python 3.7+** with `python-dateutil` package
+
 ## 🔄 Regular Monitoring
 
 To track your progress over time:
@@ -195,9 +210,17 @@ To track your progress over time:
 3. Track improvements in each metric
 4. Use the recommendations to guide improvements
 
-## 📝 Notes
+## 💡 Tips for Better Results
 
-- The script analyzes the last 90 days of JIRA data
-- Results are based on issue creation and resolution dates
-- Performance levels are based on DORA research benchmarks
-- The analysis focuses on the Terminvereinbarung (TEV) project
+1. **Fetch Recent Data**: Uses issues closed in the last 30 days for relevant metrics
+2. **Include All Issue Types**: Stories, Tasks, and Bugs all contribute to DORA metrics
+3. **Check Data Quality**: Review the fetched data to ensure it looks correct
+4. **Run Regularly**: Track your DORA metrics over time to see improvements
+
+## 🎉 Success!
+
+Once you've successfully run the analysis, you'll have valuable insights into your team's DevOps performance and can use the recommendations to improve your development process!
+
+---
+
+**Note**: This analyzer uses real JIRA data fetched via MCP tools and focuses on issues that were closed with "Done" status in the last 30 days for the most relevant and recent performance metrics.

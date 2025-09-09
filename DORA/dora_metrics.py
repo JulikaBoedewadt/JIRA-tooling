@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-DORA Metrics Analyzer - Universal Project Support
-=================================================
+DORA Metrics Analyzer
+==================================================
 
-This script provides a complete DORA metrics analysis for any JIRA project.
-It generates realistic sample data for any project key and calculates:
+This script provides a complete DORA metrics analysis for any JIRA project
+using real data fetched via MCP tools. It calculates:
 1. Lead Time for Changes
 2. Deployment Frequency  
 3. Mean Time to Recovery (MTTR)
@@ -15,6 +15,7 @@ Usage:
 
 Requirements:
     - pip install python-dateutil
+    - MCP tools for Atlassian integration
 """
 
 import json
@@ -23,164 +24,31 @@ from datetime import datetime, timedelta
 from dateutil import parser
 import statistics
 from typing import List, Dict, Any
-import os
 
-class DORAMetricsIntegrated:
+class DORAMetrics:
     def __init__(self, project_name: str, project_key: str):
-        self.cloud_id = "1fcede0e-d51b-413e-8bc1-3d718ed3d344"
-        self.data_source = "real"
         self.project_name = project_name
         self.project_key = project_key
+        self.issues_data = []
+        
+    def set_issues_data(self, issues: List[Dict[str, Any]]):
+        """Set the issues data for analysis"""
+        self.issues_data = issues
         
     def get_issues_data(self) -> List[Dict[str, Any]]:
-        """Get issues data - always uses real data"""
-        return self.get_real_mcp_data()
-    
-    def get_real_mcp_data(self) -> List[Dict[str, Any]]:
-        """Get real data from successful MCP calls"""
-        # For now, return sample data adapted for the project
-        return self.get_sample_data_for_project()
-    
-    
-    
-    def get_sample_data_for_project(self) -> List[Dict[str, Any]]:
-        """Get sample data for any project - generates realistic sample data based on project key"""
-        # Generate sample data for any project key
-        return self.generate_sample_data_for_project()
-    
-    def generate_sample_data_for_project(self) -> List[Dict[str, Any]]:
-        """Generate realistic sample data for any project key"""
-        import random
-        from datetime import datetime, timedelta
-        
-        # Generate 10-20 issues with realistic data
-        num_issues = random.randint(10, 20)
-        issues = []
-        
-        # Issue types and their probabilities
-        issue_types = [
-            ("Story", 0.5),
-            ("Task", 0.3),
-            ("Bug", 0.2)
-        ]
-        
-        # Priority levels and their probabilities
-        priorities = [
-            ("Low", 0.2),
-            ("Medium", 0.5),
-            ("High", 0.2),
-            ("Highest", 0.1)
-        ]
-        
-        # Status and their probabilities
-        statuses = [
-            ("Done", 0.7),
-            ("In Progress", 0.1),
-            ("Discarded", 0.1),
-            ("Refined", 0.1)
-        ]
-        
-        # Sample summaries for different issue types
-        story_summaries = [
-            "Implement new feature for user dashboard",
-            "Add authentication system",
-            "Create API endpoint for data retrieval",
-            "Design responsive UI components",
-            "Integrate third-party service",
-            "Optimize database performance",
-            "Add logging and monitoring",
-            "Implement caching mechanism",
-            "Create user management system",
-            "Add data validation layer"
-        ]
-        
-        task_summaries = [
-            "Update documentation",
-            "Code review and refactoring",
-            "Set up CI/CD pipeline",
-            "Configure monitoring tools",
-            "Update dependencies",
-            "Performance testing",
-            "Security audit",
-            "Database migration",
-            "Environment setup",
-            "Deployment configuration"
-        ]
-        
-        bug_summaries = [
-            "Fix memory leak in application",
-            "Resolve authentication issue",
-            "Fix data synchronization problem",
-            "Correct calculation error",
-            "Fix UI rendering bug",
-            "Resolve API timeout issue",
-            "Fix database connection error",
-            "Correct validation logic",
-            "Fix performance bottleneck",
-            "Resolve integration issue"
-        ]
-        
-        for i in range(num_issues):
-            # Select issue type based on probability
-            issue_type = random.choices([t[0] for t in issue_types], 
-                                      weights=[t[1] for t in issue_types])[0]
-            
-            # Select priority based on probability
-            priority = random.choices([p[0] for p in priorities], 
-                                    weights=[p[1] for p in priorities])[0]
-            
-            # Select status based on probability
-            status = random.choices([s[0] for s in statuses], 
-                                  weights=[s[1] for s in statuses])[0]
-            
-            # Select appropriate summary
-            if issue_type == "Story":
-                summary = random.choice(story_summaries)
-            elif issue_type == "Task":
-                summary = random.choice(task_summaries)
-            else:  # Bug
-                summary = random.choice(bug_summaries)
-            
-            # Generate realistic dates (last 90 days)
-            created_date = datetime.now() - timedelta(days=random.randint(1, 90))
-            
-            # Resolution date (if not in progress)
-            if status in ["Done", "Discarded", "Refined"]:
-                # Lead time between 1 hour and 30 days
-                lead_time_hours = random.randint(1, 30 * 24)
-                resolution_date = created_date + timedelta(hours=lead_time_hours)
-            else:
-                resolution_date = None
-            
-            # Format dates
-            created_str = created_date.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "+0200"
-            resolution_str = resolution_date.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "+0200" if resolution_date else None
-            
-            issue = {
-                "key": f"{self.project_key}-{1000 + i}",
-                "fields": {
-                    "summary": summary,
-                    "issuetype": {"name": issue_type},
-                    "created": created_str,
-                    "priority": {"name": priority},
-                    "status": {"name": status}
-                }
-            }
-            
-            if resolution_str:
-                issue["fields"]["resolutiondate"] = resolution_str
-            
-            issues.append(issue)
-        
-        return issues
+        """Get the issues data for analysis"""
+        return self.issues_data
+
+
     
     def calculate_lead_time(self, issues: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Calculate Lead Time for Changes"""
         lead_times = []
         
         for issue in issues:
-            created = issue.get("fields", {}).get("created")
-            resolved = issue.get("fields", {}).get("resolutiondate")
+            # Handle both data structures: direct fields or nested in "fields"
+            created = issue.get("created") or issue.get("fields", {}).get("created")
+            resolved = issue.get("resolutiondate") or issue.get("fields", {}).get("resolutiondate")
             
             if created and resolved:
                 try:
@@ -207,7 +75,8 @@ class DORAMetricsIntegrated:
         resolution_dates = []
         
         for issue in issues:
-            resolved = issue.get("fields", {}).get("resolutiondate")
+            # Handle both data structures: direct fields or nested in "fields"
+            resolved = issue.get("resolutiondate") or issue.get("fields", {}).get("resolutiondate")
             if resolved:
                 try:
                     resolved_date = parser.parse(resolved)
@@ -232,13 +101,15 @@ class DORAMetricsIntegrated:
     def calculate_mttr(self, issues: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Calculate Mean Time to Recovery for bugs"""
         bug_issues = [issue for issue in issues 
-                     if issue.get("fields", {}).get("issuetype", {}).get("name") == "Bug"]
+                     if (issue.get("issuetype", {}).get("name") == "Bug" or 
+                         issue.get("fields", {}).get("issuetype", {}).get("name") == "Bug")]
         
         recovery_times = []
         
         for issue in bug_issues:
-            created = issue.get("fields", {}).get("created")
-            resolved = issue.get("fields", {}).get("resolutiondate")
+            # Handle both data structures: direct fields or nested in "fields"
+            created = issue.get("created") or issue.get("fields", {}).get("created")
+            resolved = issue.get("resolutiondate") or issue.get("fields", {}).get("resolutiondate")
             
             if created and resolved:
                 try:
@@ -265,14 +136,16 @@ class DORAMetricsIntegrated:
         """Calculate Change Failure Rate"""
         total_issues = len(issues)
         bug_issues = [issue for issue in issues 
-                     if issue.get("fields", {}).get("issuetype", {}).get("name") == "Bug"]
+                     if (issue.get("issuetype", {}).get("name") == "Bug" or 
+                         issue.get("fields", {}).get("issuetype", {}).get("name") == "Bug")]
         
         bug_count = len(bug_issues)
         failure_rate = (bug_count / total_issues * 100) if total_issues > 0 else 0
         
         # Categorize by priority
         critical_bugs = [issue for issue in bug_issues 
-                        if issue.get("fields", {}).get("priority", {}).get("name") in ["Highest", "High"]]
+                        if ((issue.get("priority", {}).get("name") in ["Highest", "High"]) or
+                            (issue.get("fields", {}).get("priority", {}).get("name") in ["Highest", "High"]))]
         
         return {
             "total_issues": total_issues,
@@ -305,11 +178,14 @@ class DORAMetricsIntegrated:
     
     def analyze_dora_metrics(self) -> Dict[str, Any]:
         """Main method to analyze all DORA metrics"""
-        print(f"🔍 Analyzing DORA metrics...")
         
         # Get issues data
         issues = self.get_issues_data()
-        print(f"✅ Analyzing {len(issues)} issues")
+        if not issues:
+            print("❌ No issues data available for analysis")
+            return {}
+            
+        print(f"🔍 Analyzing DORA metrics for {len(issues)} issues")
         
         # Calculate metrics
         lead_time = self.calculate_lead_time(issues)
@@ -330,7 +206,7 @@ class DORAMetricsIntegrated:
             "change_failure_rate": {**failure_rate, "performance_level": failure_level},
             "analysis_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "total_issues_analyzed": len(issues),
-            "data_source": "Real MCP Data"
+            "data_source": "Real JIRA Data (MCP)"
         }
     
     def print_report(self, metrics: Dict[str, Any]):
@@ -361,13 +237,13 @@ class DORAMetricsIntegrated:
         # Get status icons and text
         def get_status_icon(level):
             if level == "Elite":
-                return "✅"
+                return "🤩"
             elif level == "High":
                 return "✅"
             elif level == "Medium":
                 return "⚠️"
             else:  # Low
-                return "⚠️"
+                return "🚨"
         
         def get_status_text(level):
             if level == "Elite":
@@ -384,6 +260,8 @@ class DORAMetricsIntegrated:
         print("="*80)
         print(f"{'Metric':<20} {'Current Level':<20} {'Industry Benchmark':<25} {'Status':<15}")
         print("="*80)
+        print(f"{'📊 Tickets Analyzed':<20} {metrics['total_issues_analyzed']:<20} {'':<25} {'':<15}")
+        print("-"*80)
         
         # Lead Time row
         print(f"{'Lead Time':<20} {lead_time_display:<20} {'< 1 week (Elite)':<25} {get_status_icon(lt['performance_level'])} {get_status_text(lt['performance_level'])}")
@@ -420,6 +298,7 @@ class DORAMetricsIntegrated:
         
         print("\n" + "="*80)
 
+
 def main():
     """Main function to run the DORA metrics analysis"""
     parser = argparse.ArgumentParser(description="DORA Metrics Analyzer for JIRA Projects")
@@ -435,15 +314,47 @@ def main():
     print(f"🏷️  Project: {args.project_name} ({args.project_key})")
     
     try:
-        analyzer = DORAMetricsIntegrated(args.project_name, args.project_key)
-        metrics = analyzer.analyze_dora_metrics()
-        analyzer.print_report(metrics)
+        analyzer = DORAMetrics(args.project_name, args.project_key)
         
-        # Save results to file
-        filename = f"dora_metrics_{args.project_key.lower()}_results.json"
-        with open(filename, "w") as f:
-            json.dump(metrics, f, indent=2)
-        print(f"\n💾 Results saved to: {filename}")
+        # Load data from file
+        data_file = f"tmp/dora_metrics_{args.project_key.lower()}_data.json"
+        print(f"🔄 Loading data from: {data_file}")
+        
+        try:
+            with open(data_file, 'r') as f:
+                data = json.load(f)
+            
+            issues = data.get('issues', [])
+            print(f"✅ Loaded {len(issues)} issues from {data_file}")
+            print(f"📅 Data fetched at: {data.get('fetched_at', 'Unknown')}")
+            print(f"📊 Data source: {data.get('data_source', 'Unknown')}")
+            
+        except FileNotFoundError:
+            print(f"❌ Data file not found: {data_file}")
+            print("💡 Please ensure the data file exists or run the script with MCP tools available")
+            return
+        except json.JSONDecodeError as e:
+            print(f"❌ Error parsing data file: {e}")
+            return
+        
+        if not issues:
+            print(f"❌ No issues found in data file for project {args.project_key}")
+            return
+        
+        # Set the data for analysis
+        analyzer.set_issues_data(issues)
+        
+        metrics = analyzer.analyze_dora_metrics()
+        if metrics:
+            analyzer.print_report(metrics)
+            
+            # Save results to file
+            filename = f"tmp/dora_metrics_{args.project_key.lower()}_results.json"
+            with open(filename, "w") as f:
+                json.dump(metrics, f, indent=2)
+            print(f"\n💾 Results saved to: {filename}")
+        else:
+            print("❌ No metrics calculated - no data available")
         
     except Exception as e:
         print(f"❌ Error running analysis: {e}")
